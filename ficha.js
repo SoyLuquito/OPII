@@ -14,9 +14,13 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// CONSTANTE ADMIN
+const ADMIN_EMAIL = 'contato.lucadesousa@gmail.com';
+
 // ===== VARIÁVEIS GLOBAIS =====
 let fichaId = null;
 let fichaData = null;
+let usuarioAtual = null;
 let editMode = {
     atributos: false,
     pericias: false
@@ -320,6 +324,18 @@ function carregarFichaDoFirestore(id) {
         .onSnapshot((doc) => {
             if (doc.exists) {
                 fichaData = doc.data();
+                
+                // Validação de Permissão (Dono da Ficha ou Admin)
+                const isOwner = usuarioAtual && fichaData.userId === usuarioAtual.uid;
+                const isAdmin = usuarioAtual && usuarioAtual.email && usuarioAtual.email.toLowerCase() === ADMIN_EMAIL;
+                
+                if (!isOwner && !isAdmin && fichaData.userId) {
+                    console.warn('⚠️ Acesso não autorizado a esta ficha.');
+                    alert('Você não tem permissão para acessar esta ficha.');
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+                
                 preencherFicha(fichaData);
                 console.log('✅ Ficha carregada:', fichaData.nome);
             } else {
@@ -1601,6 +1617,8 @@ auth.onAuthStateChanged(user => {
         window.location.href = 'index.html';
         return;
     }
+
+    usuarioAtual = user;
 
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');

@@ -14,6 +14,9 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// ===== CONSTANTE ADMIN =====
+const ADMIN_EMAIL = 'contato.lucadesousa@gmail.com';
+
 // ===== MAPEAMENTO DE CORES DOS PERFIS =====
 const coresPerfil = {
     verde: '#4d7d2b',
@@ -38,7 +41,8 @@ auth.onAuthStateChanged(async user => {
         usuarioAtual = user;
         const userName = document.getElementById('userName');
         if (userName) {
-            userName.textContent = user.displayName || user.email;
+            const isAdmin = user.email && user.email.toLowerCase() === ADMIN_EMAIL;
+            userName.textContent = (user.displayName || user.email) + (isAdmin ? ' (MODO ADMIN)' : '');
         }
         await carregarFichas();
     } else {
@@ -49,6 +53,8 @@ auth.onAuthStateChanged(async user => {
 // ===== CARREGAR FICHAS =====
 async function carregarFichas() {
     const container = document.getElementById('fichasContainer');
+    if (!container) return;
+
     container.innerHTML = `
         <div class="loading">
             <div class="spinner"></div>
@@ -62,11 +68,18 @@ async function carregarFichas() {
             unsubscribeFichas = null;
         }
 
-        console.log('🔍 Buscando fichas do Firestore...');
+        const isAdmin = usuarioAtual.email && usuarioAtual.email.toLowerCase() === ADMIN_EMAIL;
         
-        const snapshot = await db.collection('fichas')
-            .where('userId', '==', usuarioAtual.uid)
-            .get();
+        // Definição da query: Admin busca tudo; Usuário comum apenas suas fichas
+        let queryRef = db.collection('fichas');
+        if (!isAdmin) {
+            queryRef = queryRef.where('userId', '==', usuarioAtual.uid);
+        } else {
+            console.log('⚡ Modo Admin Ativo: Buscando todas as fichas do banco.');
+        }
+
+        console.log('🔍 Buscando fichas do Firestore...');
+        const snapshot = await queryRef.get();
 
         fichas = [];
         snapshot.forEach(doc => {
@@ -87,28 +100,26 @@ async function carregarFichas() {
         renderizarFichas();
         console.log(`✅ ${fichas.length} fichas carregadas`);
 
-        // Listener em tempo real
-        unsubscribeFichas = db.collection('fichas')
-            .where('userId', '==', usuarioAtual.uid)
-            .onSnapshot((snapshot) => {
-                console.log('🔄 Atualizando lista...');
-                fichas = [];
-                snapshot.forEach(doc => {
-                    fichas.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
+        // Listener em tempo real com a mesma regra de permissão
+        unsubscribeFichas = queryRef.onSnapshot((snapshot) => {
+            console.log('🔄 Atualizando lista em tempo real...');
+            fichas = [];
+            snapshot.forEach(doc => {
+                fichas.push({
+                    id: doc.id,
+                    ...doc.data()
                 });
-                fichas.sort((a, b) => {
-                    const dataA = a.atualizadoEm?.toDate?.() || new Date(0);
-                    const dataB = b.atualizadoEm?.toDate?.() || new Date(0);
-                    return dataB - dataA;
-                });
-                localStorage.setItem(`fichas_${usuarioAtual.uid}`, JSON.stringify(fichas));
-                renderizarFichas();
-            }, (error) => {
-                console.error('❌ Erro no listener:', error);
             });
+            fichas.sort((a, b) => {
+                const dataA = a.atualizadoEm?.toDate?.() || new Date(0);
+                const dataB = b.atualizadoEm?.toDate?.() || new Date(0);
+                return dataB - dataA;
+            });
+            localStorage.setItem(`fichas_${usuarioAtual.uid}`, JSON.stringify(fichas));
+            renderizarFichas();
+        }, (error) => {
+            console.error('❌ Erro no listener:', error);
+        });
 
     } catch (error) {
         console.error('❌ Erro ao carregar fichas:', error);
@@ -124,12 +135,13 @@ async function carregarFichas() {
 // ===== RENDERIZAR FICHAS =====
 function renderizarFichas() {
     const container = document.getElementById('fichasContainer');
+    if (!container) return;
     
     if (fichas.length === 0) {
         container.innerHTML = `
             <div class="sem-fichas">
                 <svg viewBox="0 0 24 24" width="48" height="48"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" fill="currentColor"/></svg>
-                <p>Nenhuma ficha criada</p>
+                <p>Nenhuma ficha encontrada</p>
                 <p class="sub">Clique em "Nova Ficha" para começar</p>
             </div>
         `;
@@ -137,6 +149,8 @@ function renderizarFichas() {
     }
 
     container.innerHTML = '';
+    const isAdmin = usuarioAtual && usuarioAtual.email && usuarioAtual.email.toLowerCase() === ADMIN_EMAIL;
+
     fichas.forEach(ficha => {
         const card = document.createElement('div');
         card.className = 'ficha-card';
@@ -168,6 +182,9 @@ function renderizarFichas() {
                 dataStr = 'Data desconhecida';
             }
         }
+
+        // Se for admin e a ficha não for do admin, exibe um aviso de outro dono no card
+        const doOutroUsuario = isAdmin && ficha.userId !== usuarioAtual.uid;
         
         card.innerHTML = `
             <div class="ficha-header">
@@ -177,6 +194,7 @@ function renderizarFichas() {
             <div class="ficha-info">
                 <span><strong>Ocupação:</strong> ${ocupacao}</span>
                 <span><strong>Nível:</strong> ${nivel}</span>
+                ${doOutroUsuario ? `<span style="color: #ffaa00; font-size: 11px; margin-top: 4px;">👤 Criador ID: ${ficha.userId.slice(0, 8)}...</span>` : ''}
             </div>
             <div class="ficha-acoes">
                 <button class="excluir" onclick="event.stopPropagation(); excluirFicha('${ficha.id}')">
@@ -222,9 +240,11 @@ function criarNovaFicha() {
     }
 
     const btn = document.querySelector('.btn-criar');
-    const textoOriginal = btn.innerHTML;
-    btn.innerHTML = '⏳ Criando...';
-    btn.disabled = true;
+    const textoOriginal = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.innerHTML = '⏳ Criando...';
+        btn.disabled = true;
+    }
 
     const novaFicha = {
         userId: usuarioAtual.uid,
@@ -274,14 +294,18 @@ function criarNovaFicha() {
     db.collection('fichas').add(novaFicha)
         .then(docRef => {
             console.log('✅ Ficha criada com ID:', docRef.id);
-            btn.innerHTML = textoOriginal;
-            btn.disabled = false;
+            if (btn) {
+                btn.innerHTML = textoOriginal;
+                btn.disabled = false;
+            }
             mostrarToast('✅ Ficha criada com sucesso!');
         })
         .catch(error => {
             console.error('❌ Erro ao criar ficha:', error);
-            btn.innerHTML = textoOriginal;
-            btn.disabled = false;
+            if (btn) {
+                btn.innerHTML = textoOriginal;
+                btn.disabled = false;
+            }
             mostrarToast('Erro ao criar ficha: ' + error.message, 'erro');
         });
 }
