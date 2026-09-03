@@ -394,9 +394,15 @@ function preencherFicha(dados) {
         if (pesoInput) pesoInput.value = dados.peso || '';
         if (historiaInput) historiaInput.value = dados.historia || '';
         
-        if (dados.foto && dados.foto !== '' && fotoPreview) {
-            fotoPreview.src = dados.foto;
-            if (fotoContainer) fotoContainer.classList.add('has-image');
+        // TRATAMENTO DA FOTO
+        if (fotoPreview && fotoContainer) {
+            if (dados.foto && typeof dados.foto === 'string' && dados.foto.trim() !== '') {
+                fotoPreview.src = dados.foto;
+                fotoContainer.classList.add('has-image');
+            } else {
+                fotoPreview.removeAttribute('src');
+                fotoContainer.classList.remove('has-image');
+            }
         }
         
         // RENDERIZAR TODAS AS ABAS IMEDIATAMENTE
@@ -1055,7 +1061,6 @@ function atualizarCores(perfilKey) {
         ativo.className = `nav-btn ativo ${config.navClasse}`;
     }
 
-    // APLICAR COR AO BOTÃO DE SAIR DE FORMA PERMANENTE E DESTACADA
     const btnSair = document.getElementById('btnSair') || document.querySelector('.btn-sair');
     if (btnSair) {
         btnSair.style.borderColor = config.cor;
@@ -1068,24 +1073,60 @@ function atualizarCores(perfilKey) {
     renderizarHabilidades();
 }
 
-// ===== FOTO =====
+// ===== FOTO (COMPRESSÃO BASE64 REDIMENSIONADA) =====
 function uploadFoto(event) {
     const file = event.target.files[0];
-    if (file && fotoPreview && fotoContainer) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            fotoPreview.src = e.target.result;
+    if (!file || !fotoPreview || !fotoContainer) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            // Configuração do tamanho máximo (400px x 400px)
+            const MAX_WIDTH = 400;
+            const MAX_HEIGHT = 400;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+            } else {
+                if (height > MAX_HEIGHT) {
+                    width *= MAX_HEIGHT / height;
+                    height = MAX_HEIGHT;
+                }
+            }
+
+            // Redimensionar via Canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Converter para Base64 leve (JPEG com 70% de qualidade)
+            const base64Leve = canvas.toDataURL('image/jpeg', 0.7);
+
+            fotoPreview.src = base64Leve;
             fotoContainer.classList.add('has-image');
             salvarNoFirestore();
         };
-        reader.readAsDataURL(file);
-    }
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
 }
 
 function removerFoto(event) {
     if (event) event.stopPropagation();
-    if (fotoPreview) fotoPreview.src = '';
-    if (fotoContainer) fotoContainer.classList.remove('has-image');
+    if (fotoPreview) {
+        fotoPreview.removeAttribute('src');
+    }
+    if (fotoContainer) {
+        fotoContainer.classList.remove('has-image');
+    }
     const input = document.getElementById('fotoInput');
     if (input) input.value = '';
     salvarNoFirestore();
@@ -1595,6 +1636,13 @@ window.addEventListener('beforeunload', function() {
 document.addEventListener('DOMContentLoaded', function() {
     configurarNavegacao();
     configurarEventos();
+    
+    if (fotoPreview) {
+        fotoPreview.onerror = function() {
+            this.removeAttribute('src');
+            if (fotoContainer) fotoContainer.classList.remove('has-image');
+        };
+    }
     
     if (fichaData) {
         renderizarAtributos();
