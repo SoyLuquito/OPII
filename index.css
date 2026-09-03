@@ -1,0 +1,378 @@
+/* ===== FONTE VALORANT ===== */
+@font-face {
+    font-family: 'Valorant';
+    src: url('https://db.onlinewebfonts.com/t/7c6b7f1b0d4d4d4d4d4d4d4d4d4d4d4d.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: #0a0a0a;
+    background-image: 
+        radial-gradient(ellipse at 20% 50%, rgba(139, 92, 246, 0.03) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 50%, rgba(139, 92, 246, 0.02) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 100%, rgba(139, 92, 246, 0.015) 0%, transparent 50%),
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(139, 92, 246, 0.02) 2px,
+            rgba(139, 92, 246, 0.02) 3px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(139, 92, 246, 0.015) 2px,
+            rgba(139, 92, 246, 0.015) 3px
+        );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 16px;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.login-card {
+    background: rgba(6, 6, 6, 0.92);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 40px 32px;
+    border: 1px solid rgba(139, 92, 246, 0.06);
+    box-shadow: 
+        0 20px 80px rgba(0,0,0,0.9),
+        inset 0 0 60px rgba(139, 92, 246, 0.02),
+        0 0 40px rgba(139, 92, 246, 0.02);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 40px,
+        rgba(139, 92, 246, 0.01) 40px,
+        rgba(139, 92, 246, 0.01) 41px
+    );
+    transform: rotate(45deg);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.login-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.login-header h1 {
+    font-family: 'Valorant', 'Rajdhani', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #8b5cf6;
+    letter-spacing: 2px;
+    text-shadow: 0 0 40px rgba(139, 92, 246, 0.15);
+}
+
+.login-header p {
+    color: rgba(255,255,255,0.25);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    margin-top: 4px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.3);
+}
+
+.form-group input {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(139, 92, 246, 0.06);
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    padding: 10px 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: rgba(139, 92, 246, 0.15);
+}
+
+.form-group input::placeholder {
+    color: rgba(255,255,255,0.15);
+    font-weight: 300;
+}
+
+.senha-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.senha-wrapper input {
+    padding-right: 44px;
+}
+
+.btn-olho {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.2);
+    cursor: pointer;
+    padding: 4px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-olho:hover {
+    color: rgba(255,255,255,0.5);
+}
+
+.btn-olho.oculto {
+    color: rgba(139, 92, 246, 0.4);
+}
+
+.btn-olho.oculto:hover {
+    color: rgba(139, 92, 246, 0.7);
+}
+
+.btn-primary {
+    padding: 12px;
+    background: #8b5cf6;
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 12px rgba(139, 92, 246, 0.3);
+}
+
+.btn-primary:hover {
+    background: #7c3aed;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(139, 92, 246, 0.06);
+    border-radius: 8px;
+    color: rgba(255,255,255,0.6);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.btn-google:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(139, 92, 246, 0.12);
+    color: #ffffff;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: rgba(255,255,255,0.1);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(139, 92, 246, 0.04);
+}
+
+.login-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.login-links span {
+    color: rgba(255,255,255,0.25);
+    font-size: 14px;
+}
+
+.login-links a {
+    color: rgba(139, 92, 246, 0.5);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.login-links a:hover {
+    color: #8b5cf6;
+}
+
+.mensagem {
+    margin-top: 16px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    display: none;
+}
+
+.mensagem.sucesso {
+    display: block;
+    background: rgba(139, 92, 246, 0.08);
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    color: #a78bfa;
+}
+
+.mensagem.erro {
+    display: block;
+    background: rgba(255, 50, 50, 0.08);
+    border: 1px solid rgba(255, 50, 50, 0.15);
+    color: #ff4444;
+}
+
+.mensagem.info {
+    display: block;
+    background: rgba(139, 92, 246, 0.08);
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    color: #a78bfa;
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 28px 20px;
+        border-radius: 16px;
+    }
+
+    .login-header h1 {
+        font-size: 26px;
+    }
+
+    .login-header p {
+        font-size: 12px;
+    }
+
+    .form-group input {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+
+    .btn-primary {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .btn-google {
+        font-size: 13px;
+        padding: 8px;
+    }
+
+    .login-links span,
+    .login-links a {
+        font-size: 13px;
+    }
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.02);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.06);
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.1);
+}
+
+/* ===== BOTÃO SAIR ===== */
+.btn-sair {
+    border: 1px solid var(--cor-destaque, #4d7d2b) !important;
+    color: var(--cor-destaque, #4d7d2b) !important;
+    background: rgba(255,255,255,0.02) !important;
+    flex: 0.5 !important;
+    min-width: 80px !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-sair:hover {
+    background: rgba(255,255,255,0.05) !important;
+    opacity: 0.8 !important;
+}

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Ficha de Personagem - Ordem Paranormal 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="ficha.css">
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header cor-verde" id="header">
+            <div class="header-row-1">
+                <div class="campo-nome">
+                    <label>Nome</label>
+                    <input type="text" id="nomeInput" class="destaque-verde" value="" placeholder="Escreva seu nome aqui" spellcheck="false">
+                </div>
+
+                <div class="campo-perfil">
+                    <label>Perfil</label>
+                    <div class="perfil-select-wrapper cor-verde" id="perfilWrapper">
+                        <select id="perfilSelect">
+                            <option value="verde" selected>Vigilante</option>
+                            <option value="azul">Analista</option>
+                            <option value="vermelho">Executor</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-row-2">
+                <div class="campo-ocupacao">
+                    <label>Ocupação</label>
+                    <div class="ocupacao-select-wrapper">
+                        <select id="ocupacaoSelect">
+                            <option value="">Selecione uma ocupação</option>
+                            <option value="artista">Artista</option>
+                            <option value="artista_marcial">Artista Marcial</option>
+                            <option value="assassino">Assassino</option>
+                            <option value="atleta">Atleta</option>
+                            <option value="cientista">Cientista</option>
+                            <option value="desgarrado">Desgarrado</option>
+                            <option value="figura_religiosa">Figura Religiosa</option>
+                            <option value="medico">Médico</option>
+                            <option value="pistoleiro">Pistoleiro</option>
+                            <option value="operario">Operário</option>
+                            <option value="homem_da_lei">Homem da Lei</option>
+                            <option value="professor">Professor</option>
+                            <option value="profissional_escritorio">Profissional de Escritório</option>
+                            <option value="terapeuta">Terapeuta</option>
+                            <option value="universitario">Universitário</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="campo-nivel">
+                    <label>Nível</label>
+                    <div class="nivel-wrapper">
+                        <input type="number" id="nivelInput" class="nivel-input cor-verde" value="1" min="1" max="20">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVEGAÇÃO -->
+       <div class="navegacao" id="navegacao">
+            <button class="nav-btn" data-aba="atributos">Atributos</button>
+            <button class="nav-btn" data-aba="pericias">Perícias</button>
+            <button class="nav-btn" data-aba="habilidades">Habilidades</button>
+            <button class="nav-btn" data-aba="inventario">Inventário</button>
+            <button class="nav-btn ativo" data-aba="anotacoes">Anotações</button>
+            <button class="nav-btn" data-aba="informacoes">Informações</button>
+            <button class="nav-btn btn-sair" onclick="sairDashboard()">Sair</button>
+        </div>
+
+        <!-- CONTEÚDO -->
+        <div class="conteudo">
+            <!-- ABA ATRIBUTOS -->
+            <div class="aba" id="aba-atributos">
+                <div class="edit-controls">
+                    <button class="edit-btn" id="editAtributosBtn" onclick="toggleEdit('atributos')">✎ Editar</button>
+                </div>
+                <div class="atributos-section">
+                    <div class="recursos-section">
+                        <!-- PV -->
+                        <div class="recurso-card">
+                            <div class="recurso-header">
+                                <label class="recurso-label-pv">PV</label>
+                                <div class="recurso-valores">
+                                    <div class="recurso-botoes">
+                                        <button class="recurso-btn" id="pv-menos" onclick="mudarPV(-1)">−</button>
+                                    </div>
+                                    <input type="number" id="pv-atual" value="10" min="0" onchange="atualizarBarrinhas('pv')">
+                                    <span>/</span>
+                                    <input type="number" id="pv-max" value="10" min="1" class="max-input" readonly onchange="atualizarBarrinhas('pv')">
+                                    <div class="recurso-botoes">
+                                        <button class="recurso-btn" id="pv-mais" onclick="mudarPV(1)">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="barrinhas-container" id="barrinhas-pv"></div>
+                        </div>
+
+                        <!-- PD -->
+                        <div class="recurso-card">
+                            <div class="recurso-header">
+                                <label class="recurso-label-pd">PD</label>
+                                <div class="recurso-valores">
+                                    <div class="recurso-botoes">
+                                        <button class="recurso-btn" id="pd-menos" onclick="mudarPD(-1)">−</button>
+                                    </div>
+                                    <input type="number" id="pd-atual" value="10" min="0" onchange="atualizarBarrinhas('pd')">
+                                    <span>/</span>
+                                    <input type="number" id="pd-max" value="10" min="1" class="max-input" readonly onchange="atualizarBarrinhas('pd')">
+                                    <div class="recurso-botoes">
+                                        <button class="recurso-btn" id="pd-mais" onclick="mudarPD(1)">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="barrinhas-container" id="barrinhas-pd"></div>
+                        </div>
+                    </div>
+
+                    <div class="atributos-grid">
+                        <div class="atributo-card">
+                            <div class="atributo-header">
+                                <label>Físico</label>
+                            </div>
+                            <div class="atributo-valor">
+                                <button class="atributo-btn hidden" id="fisico-menos" onclick="mudarValor('fisico', -1)">−</button>
+                                <div class="dado-container">
+                                    <img id="dado-fisico" src="dados/d6green.png" alt="Dado Físico" class="d6-ajuste">
+                                    <span class="numero-central" id="numero-central-fisico">6</span>
+                                </div>
+                                <button class="atributo-btn hidden" id="fisico-mais" onclick="mudarValor('fisico', 1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="atributo-card">
+                            <div class="atributo-header">
+                                <label>Mente</label>
+                            </div>
+                            <div class="atributo-valor">
+                                <button class="atributo-btn hidden" id="mente-menos" onclick="mudarValor('mente', -1)">−</button>
+                                <div class="dado-container">
+                                    <img id="dado-mente" src="dados/d6blue.png" alt="Dado Mente" class="d6-ajuste">
+                                    <span class="numero-central" id="numero-central-mente">6</span>
+                                </div>
+                                <button class="atributo-btn hidden" id="mente-mais" onclick="mudarValor('mente', 1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="atributo-card">
+                            <div class="atributo-header">
+                                <label>Emoção</label>
+                            </div>
+                            <div class="atributo-valor">
+                                <button class="atributo-btn hidden" id="emocao-menos" onclick="mudarValor('emocao', -1)">−</button>
+                                <div class="dado-container">
+                                    <img id="dado-emocao" src="dados/d6red.png" alt="Dado Emoção" class="d6-ajuste">
+                                    <span class="numero-central" id="numero-central-emocao">6</span>
+                                </div>
+                                <button class="atributo-btn hidden" id="emocao-mais" onclick="mudarValor('emocao', 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA PERÍCIAS -->
+            <div class="aba" id="aba-pericias">
+                <div class="edit-controls">
+                    <button class="edit-btn" id="editPericiasBtn" onclick="toggleEdit('pericias')">✎ Editar</button>
+                </div>
+                <div class="pericias-grid" id="periciasGrid">
+                    <!-- As perícias serão inseridas via JavaScript -->
+                </div>
+            </div>
+
+            <!-- ABA HABILIDADES -->
+            <div class="aba" id="aba-habilidades">
+                <div class="habilidades-header">
+                    <button class="habilidades-btn" onclick="abrirModalHabilidade()">
+                        <svg class="icon-btn" viewBox="0 0 24 24" width="16" height="16"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" fill="currentColor"/></svg>
+                        Adicionar
+                    </button>
+                </div>
+                <div id="habilidadesContainer">
+                    <!-- Habilidades serão inseridas via JavaScript -->
+                </div>
+            </div>
+
+            <!-- ABA INVENTÁRIO -->
+            <div class="aba" id="aba-inventario">
+                <div class="inventario-header">
+                    <button class="inventario-btn" onclick="abrirModalItem()">
+                        <svg class="icon-btn" viewBox="0 0 24 24" width="16" height="16"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" fill="currentColor"/></svg>
+                        Adicionar Item
+                    </button>
+                </div>
+                <div id="inventarioContainer">
+                    <!-- Itens serão inseridos via JavaScript -->
+                </div>
+            </div>
+
+            <!-- ABA ANOTAÇÕES -->
+            <div class="aba ativa" id="aba-anotacoes">
+                <div class="anotacoes-header">
+                    <div class="anotacoes-filtros">
+                        <input type="text" id="pesquisaAnotacao" placeholder="Pesquisar nota..." oninput="filtrarAnotacoes()">
+                        <select id="filtroCategoria" onchange="filtrarAnotacoes()">
+                            <option value="">Todas as categorias</option>
+                        </select>
+                    </div>
+                    <button class="anotacoes-btn" onclick="abrirModalNota()">
+                        <svg class="icon-btn" viewBox="0 0 24 24" width="16" height="16"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" fill="currentColor"/></svg>
+                        Nova Nota
+                    </button>
+                </div>
+                <div id="anotacoesContainer">
+                    <!-- Notas serão inseridas via JavaScript -->
+                </div>
+            </div>
+
+            <!-- ABA INFORMAÇÕES -->
+            <div class="aba" id="aba-informacoes">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Idade</label>
+                        <input type="number" id="idadeInput" value="" placeholder="Digite sua idade">
+                    </div>
+                    <div class="info-item">
+                        <label>Gênero</label>
+                        <input type="text" id="generoInput" value="" placeholder="Digite seu gênero">
+                    </div>
+                    <div class="info-item">
+                        <label>Altura</label>
+                        <input type="text" id="alturaInput" value="" placeholder="Ex: 1.80m">
+                    </div>
+                    <div class="info-item">
+                        <label>Peso</label>
+                        <input type="text" id="pesoInput" value="" placeholder="Ex: 75kg">
+                    </div>
+                    <div class="info-item" style="grid-column: 1 / -1;">
+                        <label>História</label>
+                        <textarea id="historiaInput" placeholder="Descreva a história do seu personagem..." rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="foto-container" id="fotoContainer" onclick="document.getElementById('fotoInput').click()">
+                    <input type="file" id="fotoInput" accept="image/*" style="display:none" onchange="uploadFoto(event)">
+                    <div class="placeholder">
+                        <svg viewBox="0 0 24 24" width="48" height="48" style="opacity: 0.3; fill: currentColor;"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                        <div class="texto">Adicionar Foto</div>
+                    </div>
+                    <img id="fotoPreview" src="" alt="Foto do Personagem">
+                    <button class="remover-foto" onclick="removerFoto(event)">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                        Remover
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DESCRIÇÃO PERÍCIA -->
+    <div class="modal-overlay" id="modalDescricao">
+        <div class="modal-content">
+            <button class="modal-fechar" onclick="fecharModal()">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+            <div class="modal-titulo" id="modalTitulo"></div>
+            <div class="modal-descricao" id="modalDescricaoTexto"></div>
+        </div>
+    </div>
+
+    <!-- MODAL HABILIDADE -->
+    <div class="modal-habilidade-overlay" id="modalHabilidade">
+        <div class="modal-habilidade-content">
+            <button class="modal-habilidade-fechar" onclick="fecharModalHabilidade()">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+            <div class="modal-titulo" id="modalHabilidadeTitulo">Nova Habilidade</div>
+            <label>Nome da Habilidade</label>
+            <input type="text" id="habilidadeNomeInput" placeholder="Digite o nome...">
+            <label>Descrição</label>
+            <textarea id="habilidadeDescInput" placeholder="Digite a descrição..."></textarea>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.2); margin-bottom: 12px;">
+                Use <span style="color: var(--cor-destaque, #4d7d2b);">**texto**</span> para negrito e <span style="color: var(--cor-destaque, #4d7d2b);">*texto*</span> para itálico
+            </div>
+            <div class="modal-habilidade-botoes">
+                <button onclick="fecharModalHabilidade()">Cancelar</button>
+                <button class="salvar" onclick="salvarHabilidade()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ITEM -->
+    <div class="modal-item-overlay" id="modalItem">
+        <div class="modal-item-content">
+            <button class="modal-item-fechar" onclick="fecharModalItem()">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+            <div class="modal-titulo" id="modalItemTitulo">Novo Item</div>
+            
+            <label>Nome do Item</label>
+            <input type="text" id="itemNomeInput" placeholder="Digite o nome do item...">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                    <label>Dano</label>
+                    <input type="text" id="itemDanoInput" placeholder="Ex: 1d6">
+                </div>
+                <div>
+                    <label>Crítico</label>
+                    <select id="itemCriticoInput">
+                        <option value="x2">x2</option>
+                        <option value="x3" selected>x3</option>
+                        <option value="x4">x4</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                    <label>Tipo</label>
+                    <select id="itemTipoInput">
+                        <option value="Corpo a Corpo">Corpo a Corpo</option>
+                        <option value="Arma de Arremesso">Arma de Arremesso</option>
+                        <option value="Arma de Disparo">Arma de Disparo</option>
+                        <option value="Arma de Fogo">Arma de Fogo</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Tipo de Dano</label>
+                    <select id="itemTipoDanoInput">
+                        <option value="balístico">Balístico</option>
+                        <option value="corte">Corte</option>
+                        <option value="eletricidade">Eletricidade</option>
+                        <option value="energia">Energia</option>
+                        <option value="fogo">Fogo</option>
+                        <option value="frio">Frio</option>
+                        <option value="impacto">Impacto</option>
+                        <option value="conhecimento">Conhecimento</option>
+                        <option value="medo">Medo</option>
+                        <option value="mental">Mental</option>
+                        <option value="perfuração">Perfuração</option>
+                        <option value="sangue">Sangue</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                <div>
+                    <label>Proficiência</label>
+                    <select id="itemProficienciaInput">
+                        <option value="simples">Simples</option>
+                        <option value="tática">Tática</option>
+                        <option value="pesada">Pesada</option>
+                    </select>
+                </div>
+                <div style="grid-column: span 2;">
+                    <label>Alcance</label>
+                    <select id="itemAlcanceInput">
+                        <option value="-">-</option>
+                        <option value="curto">Curto</option>
+                        <option value="médio">Médio</option>
+                        <option value="longo">Longo</option>
+                        <option value="extremo">Extremo</option>
+                    </select>
+                </div>
+            </div>
+            
+            <label>Descrição</label>
+            <textarea id="itemDescInput" placeholder="Digite a descrição do item..."></textarea>
+            
+            <div class="modal-item-botoes">
+                <button onclick="fecharModalItem()">Cancelar</button>
+                <button class="salvar" onclick="salvarItem()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ANOTAÇÃO -->
+    <div class="modal-nota-overlay" id="modalNota">
+        <div class="modal-nota-content">
+            <button class="modal-nota-fechar" onclick="fecharModalNota()">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+            <div class="modal-titulo" id="modalNotaTitulo">Nova Nota</div>
+            
+            <label>Título da Nota</label>
+            <input type="text" id="notaTituloInput" placeholder="Digite o título...">
+            
+            <label>Cor</label>
+            <div class="nota-cores-grid" id="notaCoresGrid">
+                <button class="cor-btn selecionada" data-cor="#4d7d2b" style="background: #4d7d2b;" onclick="selecionarCor(this, '#4d7d2b')"></button>
+                <button class="cor-btn" data-cor="#387cdf" style="background: #387cdf;" onclick="selecionarCor(this, '#387cdf')"></button>
+                <button class="cor-btn" data-cor="#b12a14" style="background: #b12a14;" onclick="selecionarCor(this, '#b12a14')"></button>
+                <button class="cor-btn" data-cor="#eab308" style="background: #eab308;" onclick="selecionarCor(this, '#eab308')"></button>
+                <button class="cor-btn" data-cor="#8b5cf6" style="background: #8b5cf6;" onclick="selecionarCor(this, '#8b5cf6')"></button>
+                <button class="cor-btn" data-cor="#ec4899" style="background: #ec4899;" onclick="selecionarCor(this, '#ec4899')"></button>
+                <button class="cor-btn" data-cor="#f97316" style="background: #f97316;" onclick="selecionarCor(this, '#f97316')"></button>
+                <button class="cor-btn" data-cor="#06b6d4" style="background: #06b6d4;" onclick="selecionarCor(this, '#06b6d4')"></button>
+                <button class="cor-btn" data-cor="#ffffff" style="background: #ffffff; border: 1px solid rgba(255,255,255,0.2);" onclick="selecionarCor(this, '#ffffff')"></button>
+                <button class="cor-btn" data-cor="#64748b" style="background: #64748b;" onclick="selecionarCor(this, '#64748b')"></button>
+            </div>
+            <input type="hidden" id="notaCorInput" value="#4d7d2b">
+            
+            <label>Categoria</label>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <select id="notaCategoriaSelect" style="flex: 1;">
+                    <option value="">Sem categoria</option>
+                </select>
+                <button onclick="criarNovaCategoria()" class="btn-categoria-nova" title="Criar nova categoria">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                </button>
+            </div>
+            <div id="novaCategoriaContainer" style="display: none; margin-top: 8px;">
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="notaCategoriaNova" placeholder="Digite o nome da nova categoria..." style="flex: 1;">
+                    <button onclick="confirmarNovaCategoria()" class="btn-confirmar">✓</button>
+                    <button onclick="cancelarNovaCategoria()" class="btn-cancelar">✕</button>
+                </div>
+            </div>
+            
+            <label>Conteúdo</label>
+            <div class="nota-editor-toolbar">
+                <button onclick="formatarNota('bold')" title="Negrito"><b>B</b></button>
+                <button onclick="formatarNota('italic')" title="Itálico"><i>I</i></button>
+                <button onclick="formatarNota('underline')" title="Sublinhado"><u>U</u></button>
+                <button onclick="formatarNota('strikeThrough')" title="Tachado"><s>S</s></button>
+                <span class="separator"></span>
+                <button onclick="formatarNota('removeFormat')" title="Limpar formatação">Limpar formatação</button>
+            </div>
+            <div id="notaConteudoEditor" contenteditable="true" class="nota-editor" placeholder="Digite o conteúdo da nota..."></div>
+            
+            <div class="modal-nota-botoes">
+                <button onclick="fecharModalNota()">Cancelar</button>
+                <button class="salvar" onclick="salvarNota()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <script src="ficha.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="referrer" content="no-referrer">
+    <title>Dashboard - Ordem Paranormal 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h1>Ordem Paranormal 2</h1>
+                <span class="subtitle">Fichas de Personagem</span>
+            </div>
+            <div class="header-right">
+                <span class="user-name" id="userName">Carregando...</span>
+                <button class="btn-logout" onclick="fazerLogout()">
+                    <svg viewBox="0 0 24 24" width="18" height="18"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" fill="currentColor"/></svg>
+                    Sair
+                </button>
+            </div>
+        </header>
+
+        <!-- Conteúdo -->
+        <main class="dashboard-main">
+            <div class="dashboard-actions">
+                <button class="btn-criar" onclick="criarNovaFicha()">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" fill="currentColor"/></svg>
+                    Nova Ficha
+                </button>
+                <div class="search-box">
+                    <input type="text" id="searchFicha" placeholder="Buscar ficha..." oninput="filtrarFichas()">
+                </div>
+            </div>
+
+            <div id="fichasContainer" class="fichas-grid">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Carregando fichas...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <script src="dashboard.js"></script>
+</body>
+</html>
